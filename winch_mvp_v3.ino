@@ -123,13 +123,13 @@ void doHome() {
 
 void doCloseMM(float mm, bool tighten=true) {
   float d = applyDir(mmToDeg(mm));
-  setDiscreteTarget(posDeg + d, tighten, /*tightening=*/(d>0));
+  setDiscreteTarget(posDeg - d, tighten, /*tightening=*/false);
   Serial.print(F("{\"ok\":true,\"cmd\":\"close\",\"mm\":")); Serial.print(mm,1); Serial.println(F("}"));
 }
 
 void doOpenMM(float mm, bool release=true) {
   float d = applyDir(mmToDeg(mm));
-  setDiscreteTarget(posDeg - d, release, /*tightening=*/false);
+  setDiscreteTarget(posDeg + d, release, /*tightening=*/(d>0));
   Serial.print(F("{\"ok\":true,\"cmd\":\"open\",\"mm\":")); Serial.print(mm,1); Serial.println(F("}"));
 }
 
@@ -191,19 +191,19 @@ bool edge(uint8_t pin, bool &prev) {
 
 void handleButtons() {
   // taps → discrete steps
-  if (edge(PIN_CLOSE, prevClose) && prevClose == LOW) doCloseMM(stepMM, true);
-  if (edge(PIN_OPEN,  prevOpen ) && prevOpen  == LOW) doOpenMM (stepMM, true);
+  if (edge(PIN_CLOSE, prevClose) && prevClose == LOW) doOpenMM(stepMM, true);
+  if (edge(PIN_OPEN,  prevOpen ) && prevOpen  == LOW) doCloseMM (stepMM, true);
 
   // holds → creep
   bool closeHeld = (digitalRead(PIN_CLOSE) == LOW);
   bool openHeld  = (digitalRead(PIN_OPEN ) == LOW);
 
   if (closeHeld && !openHeld) {
-    startCreep(true);
-  } else if (openHeld && !closeHeld) {
     startCreep(false);
+  } else if (openHeld && !closeHeld) {
+    startCreep(true);
   } else {
-    // stop creep only (don’t interrupt discrete move)
+    // stop creep only (don't interrupt discrete move)
     bool isDiscrete = (fabsf(fabsf(velDegPerS) - MOVE_DEG_S) < 1e-3f);
     if (!isDiscrete) stopCreep();
   }
