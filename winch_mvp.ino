@@ -20,9 +20,9 @@ const float   R_MM_DEFAULT      = 10.0f;   // spool radius (mm)
 const float   STEP_MM_DEFAULT   = 5.0f;    // tap step (mm)
 const float   HOLD_MM_S_DEFAULT = 25.0f;   // hold creep speed (mm/s)
 const float   MOVE_DEG_S        = 360.0f;  // discrete move speed (deg/s)
-const int     LIM_MIN_DEFAULT   = 30;      // safe servo min/max (deg)
-const int     LIM_MAX_DEFAULT   = 150;
-const int     HOME_DEG_DEFAULT  = 90;
+const int     LIM_MIN_DEFAULT   = 10;      // safe servo min/max (deg) //30
+const int     LIM_MAX_DEFAULT   = 170;     // 150
+const int     HOME_DEG_DEFAULT  = 180;     // 90
 const int     TRIM_DEG          = 2;       // tiny tighten/release nudge
 
 // -------- Timing --------
